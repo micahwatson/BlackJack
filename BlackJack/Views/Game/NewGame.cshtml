@@ -1,0 +1,58 @@
+﻿@model BlackJack.Models.Game
+
+@{
+    ViewData["Title"] = "Black Jack Game";
+}
+
+@{ 
+    var game = ViewBag.Message;
+}
+
+
+@foreach (var player in game.Players)
+{
+    <h4>@player.Name</h4>
+    <h4>Score: @player.Score</h4>
+    @if (player.Name != "Dealer")
+    {
+        <h4>Round Card Total: @player.RoundCardTotal</h4>
+    }
+
+    @foreach (var card in player.Hand)
+    {
+        @if (!card.FaceDown)
+        {
+            <p>@card.Name @card.Suit</p>
+        }
+        else
+        {
+            if (player.Name != "Dealer")
+            {
+                <p id="facedown">Card Face Down</p>
+                <p id="card" style="display:none">@card.Name @card.Suit</p>
+                <button id="ShowCard">Show Card</button>
+            }
+            else
+            {
+                <p>Card Face Down</p>
+            }
+        }
+
+    }
+}
+
+
+@using (Html.BeginForm("NewGame", "Game"))
+{
+    <button>New Game</button>
+}
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        document.getElementById("ShowCard").onclick = function () {
+            document.getElementById("card").style.display = "block";
+            document.getElementById("facedown").style.display = "none";
+        }</script>
+}
